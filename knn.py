@@ -14,24 +14,23 @@ from sklearn.metrics import accuracy_score
 
 
 dataset = pd.read_csv(r'C:\Users\Brian Coppola\datathon-workspace\US\US\us19.csv')
-print(len(dataset))
-print(dataset.head())
-
 # split dataset
-
 #dataprep
+##############################Inputs###############################################|
+#iloc[:, col-x to col-y]                                                           |
+#Health Care Workers & Mental Health Disorders                                     |
+#Columns LF - LR                                                                   |
+x = dataset.iloc[:,[346,317,318,319,320,321,322,323,324,325,326,327,328,329,330]] #|
+#print(x)                                                                          #|
+#                                                                                 #|
+##############################OUTPUT#######################################|#######|
+#Column KF  = DAST1                                                                |
+#DAST 1- Have you used drugs other than those required for medical reasons?        |
+#1 = yes  0 = no                                                                   |
+y = dataset.iloc[:, 291]                                                          #|
+###################################################################################|
 
-#inputs
-#iloc[:, col-x to col-y]
-#Answers for drug abuse
-#Columns KF to KO
-x = dataset.iloc[:, 291:301]
-print(x)
-#output
-y = dataset.iloc[:, 348: 354]
-print(y)
 x_train, x_test, y_train, y_test = train_test_split(x, y, random_state = 0, test_size = .2)
-#print(train_test_split(x, y, random_state = 0, test_size = .2))
 # Feature scaling
 sc_x = StandardScaler()
 x_train = sc_x.fit_transform(x_train)
@@ -44,24 +43,36 @@ x_test = sc_x.transform(x_test)
 classifier = KNeighborsClassifier(n_neighbors = 11, p = 2, metric = 'euclidean').fit(x_train,y_train)
 
 #Predict the test set results
-y_pred = classifier.predict(x_test)
-print(y_pred)
-
-#confusion matrix
-#out
-#------predicted
-#actual|
 #
+y_pred = classifier.predict(x_test)
+#print('----------------Prediction------------')
+#print(y_pred)
 
+#tests data to find false postive and false
+#print('---------------Test------------')
+#print(y_test)
+
+############################Confusion Matrix############################
+#
+#------Actual Values
+#P   V|     |      |
+#r   a| TP  |  FP  |
+#e   l|_____|______|
+#d   u|     |      |
+#i   e| FN  |  TN  |
+#c   s|_____|______|
+#t
+#e
+#d
 print('-----------------CONFUSTION MATRIX-----------------')
 cm = confusion_matrix(y_test, y_pred)
 print(cm)
 
-#f1 score
+###########################F1 Score################################################
 print('-----------------F1 SCORE-----------------')
-print(f1_score(y_test, y_pred, pos_label='positive' ,average = 'micro'))
+print(f1_score(y_test, y_pred, pos_label='positive' ,average = 'weighted'))
 
-#accuracy score
+###########################Accuracy Score###########################################
 print('-----------------ACCURACY SCORE-----------------')
 print(accuracy_score(y_test, y_pred))
 
